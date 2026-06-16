@@ -1,20 +1,15 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+<img width="1200" height="475" alt="Banner" src="https://firebase.google.com/images/social.png" />
 </div>
 
-# Run and deploy your AI Studio app
+# Shipper Performance Tracker
 
-This contains everything you need to run your app locally.
+Ứng dụng theo dõi hiệu suất chạy xe dành cho Huy 🏍️
 
-View your app in AI Studio: https://ai.studio/apps/4f1edbf5-8977-4c96-ada2-5060f12ae1a7
+## Chạy locally
 
-## Run Locally
+**Yêu cầu:** Node.js
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Cài dependencies:
+   `npm install --legacy-peer-deps`
+2. Điền các biến môi trường vào `.env.local`:

@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "DailySummary": {
+      "title": "DailySummary",
+      "description": "Daily metrics for the shipper.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "revenue": { "type": "number" },
+        "orders": { "type": "number" },
+        "fuelCost": { "type": "number" },
+        "foodCost": { "type": "number" },
+        "otherCost": { "type": "number" },
+        "targetRevenue": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["date", "revenue", "orders", "fuelCost", "foodCost", "otherCost", "targetRevenue", "userId"]
+    },
+    "WorkSession": {
+      "title": "WorkSession",
+      "description": "Work session for the shipper.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "startTime": { "type": "string" },
+        "endTime": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["date", "startTime", "endTime", "userId"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "User specific settings.",
+      "type": "object",
+      "properties": {
+        "discordWebhook": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["discordWebhook", "userId"]
+    }
+  },
+  "firestore": {
+    "users/{userId}/dailySummaries/{dailySummaryId}": {
+      "schema": { "$ref": "DailySummary" },
+      "description": "A user's daily performance summaries."
+    },
+    "users/{userId}/workSessions/{workSessionId}": {
+      "schema": { "$ref": "WorkSession" },
+      "description": "A user's work sessions."
+    },
+    "users/{userId}/settings/{settingId}": {
+      "schema": { "$ref": "Settings" },
+      "description": "A user's settings. (settingId will generally just be 'default')"
+    }
+  }
+}

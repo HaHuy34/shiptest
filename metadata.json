@@ -1,0 +1,6 @@
+{
+  "name": "Huy ơi !",
+  "description": "An application for delivery drivers to track their performance, revenue, expenses, and goals. Mobile first, dark mode by default.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

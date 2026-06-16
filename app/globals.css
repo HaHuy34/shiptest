@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+  
+  --color-background: #020617;
+  --color-card: #0f172a;
+  --color-border: rgba(255, 255, 255, 0.05);
+  --color-accent: #8b5cf6;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: white;
+  }
+}

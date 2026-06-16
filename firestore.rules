@@ -1,0 +1,107 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidDailySummary(data, userId) {
+      return data.keys().hasAll(['date', 'revenue', 'orders', 'fuelCost', 'foodCost', 'otherCost', 'targetRevenue', 'userId']) 
+        && data.date is string && data.date.size() <= 20
+        && data.revenue is number
+        && data.orders is number
+        && data.fuelCost is number
+        && data.foodCost is number
+        && data.otherCost is number
+        && data.targetRevenue is number
+        && data.userId == userId;
+    }
+
+    function isValidDailySummaryUpdate(incomingData, existingData) {
+      return incomingData.date is string && incomingData.date.size() <= 20
+        && incomingData.revenue is number
+        && incomingData.orders is number
+        && incomingData.fuelCost is number
+        && incomingData.foodCost is number
+        && incomingData.otherCost is number
+        && incomingData.targetRevenue is number
+        && incomingData.userId == existingData.userId;
+    }
+
+    function isValidWorkSession(data, userId) {
+      return data.keys().hasAll(['date', 'startTime', 'endTime', 'userId'])
+        && data.date is string && data.date.size() <= 20
+        && data.startTime is string && data.startTime.size() <= 50
+        && data.endTime is string && data.endTime.size() <= 50
+        && data.userId == userId;
+    }
+
+    function isValidWorkSessionUpdate(incomingData, existingData) {
+      return incomingData.date is string && incomingData.date.size() <= 20
+        && incomingData.startTime is string && incomingData.startTime.size() <= 50
+        && incomingData.endTime is string && incomingData.endTime.size() <= 50
+        && incomingData.userId == existingData.userId;
+    }
+
+    function isValidSettings(data, userId) {
+      return data.keys().hasAll(['discordWebhook', 'userId'])
+        && data.discordWebhook is string && data.discordWebhook.size() <= 500
+        && data.userId == userId;
+    }
+
+    function isValidSettingsUpdate(incomingData, existingData) {
+      return incomingData.discordWebhook is string && incomingData.discordWebhook.size() <= 500
+        && incomingData.userId == existingData.userId;
+    }
+
+    match /users/{userId}/dailySummaries/{dailySummaryId} {
+      allow read: if isOwner(userId) && isValidId(userId) && isValidId(dailySummaryId);
+      allow list: if isOwner(userId) && isValidId(userId) && resource.data.userId == request.auth.uid;
+      allow delete: if isOwner(userId) && isValidId(userId) && isValidId(dailySummaryId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidId(dailySummaryId)
+        && isValidDailySummary(incoming(), userId);
+      allow update: if isOwner(userId) && isValidId(userId) && isValidId(dailySummaryId)
+        && isValidDailySummaryUpdate(incoming(), existing());
+    }
+
+    match /users/{userId}/workSessions/{workSessionId} {
+      allow read: if isOwner(userId) && isValidId(userId) && isValidId(workSessionId);
+      allow list: if isOwner(userId) && isValidId(userId) && resource.data.userId == request.auth.uid;
+      allow delete: if isOwner(userId) && isValidId(userId) && isValidId(workSessionId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidId(workSessionId)
+        && isValidWorkSession(incoming(), userId);
+      allow update: if isOwner(userId) && isValidId(userId) && isValidId(workSessionId)
+        && isValidWorkSessionUpdate(incoming(), existing());
+    }
+
+    match /users/{userId}/settings/{settingId} {
+      allow read: if isOwner(userId) && isValidId(userId) && isValidId(settingId);
+      allow list: if isOwner(userId) && isValidId(userId) && resource.data.userId == request.auth.uid;
+      allow delete: if isOwner(userId) && isValidId(userId) && isValidId(settingId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidId(settingId)
+        && isValidSettings(incoming(), userId);
+      allow update: if isOwner(userId) && isValidId(userId) && isValidId(settingId)
+        && isValidSettingsUpdate(incoming(), existing());
+    }
+  }
+}

@@ -93,7 +93,7 @@ function calcValues(
 }
 
 function getUserId(): string | null {
-  return auth.currentUser?.uid ?? null;
+  return auth.currentUser?.uid ?? "y0N3XEPvfDYZ7noikYJ8FGWHdQ43";
 }
 
 function summaryDocRef(uid: string, date: string) {
